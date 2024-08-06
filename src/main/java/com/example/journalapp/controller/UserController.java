@@ -21,4 +21,25 @@ public class UserController {
     public User getUser(@PathVariable String username) {
         return userService.findByUsername(username);
     }
+
+    @PutMapping("/{username}")
+    public User updateUser(@PathVariable String username, @RequestBody User user) {
+        User existingUser = userService.findByUsername(username);
+        if (existingUser != null) {
+            user.setId(existingUser.getId()); // Ensure the existing user's ID is retained
+            return userService.updateUser(user);
+        } else {
+            return null; // Or handle the case when the user is not found, e.g., return a 404 status
+        }
+    }
+
+    @DeleteMapping("/{username}")
+    public void deleteUser(@PathVariable String username) {
+        User existingUser = userService.findByUsername(username);
+        if (existingUser != null) {
+            userService.deleteUser(username);
+        } else {
+            // Handle the case when the user is not found, e.g., return a 404 status
+        }
+    }
 }

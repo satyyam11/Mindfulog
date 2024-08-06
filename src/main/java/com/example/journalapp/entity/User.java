@@ -12,4 +12,3 @@ public class User {
     private String username;
     private String password; // Store hashed password in production
 }
-
