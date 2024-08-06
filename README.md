@@ -1,6 +1,6 @@
 # Mindfullog
 
-Mindfullog is a personal journal application built with Spring Boot and MongoDB. It provides a secure and intuitive platform for managing your daily thoughts and reflections. With features designed for ease of use and scalability, Mindfullog helps you keep track of your personal growth and mindfulness journey.
+Mindfullog is a personal journal application built with Spring Boot and MongoDB It provides a secure and intuitive platform for managing your daily thoughts and reflections. With features designed for ease of use and scalability, Mindfullog helps you keep track of your personal growth and mindfulness journey.
 
 ## Features
 
