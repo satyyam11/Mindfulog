@@ -5,6 +5,8 @@ import com.example.journalapp.service.JournalEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/journal-entries")
 public class JournalEntryController {
@@ -17,5 +19,23 @@ public class JournalEntryController {
         return journalEntryService.save(journalEntry);
     }
 
-    // Other methods for GET, PUT, DELETE
+    @GetMapping
+    public List<JournalEntry> getAllEntries() {
+        return journalEntryService.getAllEntries();
+    }
+
+    @GetMapping("/{id}")
+    public JournalEntry getEntryById(@PathVariable String id) {
+        return journalEntryService.getEntryById(id);
+    }
+
+    @PutMapping("/{id}")
+    public JournalEntry updateEntry(@PathVariable String id, @RequestBody JournalEntry journalEntry) {
+        return journalEntryService.updateEntry(id, journalEntry);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteEntry(@PathVariable String id) {
+        journalEntryService.deleteEntry(id);
+    }
 }
