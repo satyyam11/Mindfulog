@@ -16,7 +16,7 @@ Mindfullog is a personal journal application built with Spring Boot and MongoDB.
 - **Backend**: Spring Boot
 - **Database**: MongoDB
 - **Frontend**: Frontend will be updated soon
-- **Security**: Spring Security is being added
+- **Security**: Role based security is added
 
 ## Getting Started
 
