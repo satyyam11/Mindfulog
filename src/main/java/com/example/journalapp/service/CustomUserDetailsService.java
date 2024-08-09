@@ -12,13 +12,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    // Constructor for dependency injection
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    public CustomUserDetailsService() {
-
-        userRepository = null;
     }
 
     @Override

@@ -3,31 +3,38 @@ package com.example.journalapp.service;
 import com.example.journalapp.entity.User;
 import com.example.journalapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Primary
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Ensure that roles are returned as a string array for the UserDetails
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .roles("USER") // Adjust roles as needed
+                .roles(user.getRole() != null ? user.getRole().name() : "USER") // Default to "USER" if no role is set
                 .build();
     }
 
@@ -42,6 +49,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(User user) {
+        // Optionally, you might want to check if the user exists before updating
+        if (!userRepository.existsByUsername(user.getUsername())) {
+            throw new UsernameNotFoundException("User not found");
+        }
         return userRepository.save(user);
     }
 

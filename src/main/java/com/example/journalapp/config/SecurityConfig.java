@@ -1,7 +1,5 @@
 package com.example.journalapp.config;
 
-import com.example.journalapp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,20 +13,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserService userService;
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/api/journal-entries/**").authenticated()
+                                .anyRequest().permitAll()
                 )
-                .formLogin(form -> form
-                        .loginPage("/api/auth/login")
-                        .permitAll()
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login")
+                                .permitAll()
                 )
                 .logout(logout -> logout
                         .permitAll()
@@ -38,12 +40,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userService.loadUserByUsername(username);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public UserDetailsService userDetailsService() {
+        return userDetailsService;
+    }
+
+    // Use this method to provide default configurations for HTTP Basic
+    private static HttpSecurityConfigurerCustomizer withDefaults() {
+        return new HttpSecurityConfigurerCustomizer();
+    }
+
+    private static class HttpSecurityConfigurerCustomizer
+            implements SecurityConfigurer<HttpSecurity> {
+
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            // Default HTTP Basic configuration
+        }
     }
 }
