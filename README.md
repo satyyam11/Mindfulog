@@ -10,6 +10,7 @@ Mindfullog is a personal journal application built with Spring Boot and MongoDB.
 - **Search and Filter**: Easily search and filter your entries by date or keywords.
 - **Responsive Design**: Accessible from both desktop and mobile devices.
 - **Data Persistence**: Utilizes MongoDB for reliable data storage and retrieval.
+- **Security Added**: Security Added
 
 ## Tech Stack
 
