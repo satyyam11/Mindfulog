@@ -2,6 +2,7 @@ package com.example.journalapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,7 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(@Lazy UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -42,24 +43,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return userDetailsService;
-    }
-
-    // Use this method to provide default configurations for HTTP Basic
-    private static HttpSecurityConfigurerCustomizer withDefaults() {
-        return new HttpSecurityConfigurerCustomizer();
-    }
-
-    private static class HttpSecurityConfigurerCustomizer
-            implements SecurityConfigurer<HttpSecurity> {
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            // Default HTTP Basic configuration
-        }
     }
 }

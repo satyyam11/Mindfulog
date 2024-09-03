@@ -3,6 +3,7 @@ package com.example.journalapp.service;
 import com.example.journalapp.entity.User;
 import com.example.journalapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +21,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -30,7 +31,6 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Ensure that roles are returned as a string array for the UserDetails
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
                 .password(user.getPassword())
@@ -49,7 +49,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(User user) {
-        // Optionally, you might want to check if the user exists before updating
         if (!userRepository.existsByUsername(user.getUsername())) {
             throw new UsernameNotFoundException("User not found");
         }
