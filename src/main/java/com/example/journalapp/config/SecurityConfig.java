@@ -23,18 +23,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .disable() // Disable CSRF globally; configure selectively for production
+                )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/journal-entries/**").authenticated()
+                                .requestMatchers("/journal/**").authenticated()  // Require authentication for /journal endpoints
                                 .anyRequest().permitAll()
                 )
                 .formLogin(formLogin ->
                         formLogin
-                                .loginPage("/login")
+                                .loginPage("/login")  // Ensure this points to the login page
                                 .permitAll()
                 )
-                .logout(logout -> logout
-                        .permitAll()
+                .logout(logout ->
+                        logout
+                                .permitAll()
                 );
 
         return http.build();
